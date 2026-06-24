@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work Hard — To-Do & Pomodoro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-orbs">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <!-- ================= AUTH SCREEN ================= -->
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <h1>🚀 Work Hard</h1>
+      <p class="subtitle">Sign in to track your progress</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth="login">Login</button>
+        <button class="auth-tab" data-auth="register">Register</button>
+      </div>
+
+      <form id="auth-form" class="auth-form">
+        <input type="text" id="auth-username" placeholder="Username" autocomplete="username" />
+        <input type="password" id="auth-password" placeholder="Password" autocomplete="current-password" />
+        <p id="auth-error" class="auth-error"></p>
+        <button type="submit" id="auth-submit" class="btn-add auth-submit">Login</button>
+      </form>
+
+      <div class="auth-divider"><span>or</span></div>
+      <button id="guest-btn" class="btn-guest">Continue as guest →</button>
+      <p class="guest-hint">No account needed. Your data stays in this browser — sign up later to save it.</p>
+    </div>
+  </div>
+
+  <!-- ================= MAIN APP ================= -->
+  <div class="app" id="app" style="display:none">
+    <header class="app-header">
+      <div class="header-top">
+        <div>
+          <h1>🚀 Work Hard</h1>
+          <p class="subtitle">Organize your tasks and study with focus</p>
+        </div>
+        <div class="user-box">
+          <span id="user-name" class="user-name"></span>
+          <button id="logout-btn" class="btn-logout" title="Logout">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs" data-active="todo">
+      <button class="tab-btn active" data-tab="todo">📝 Tasks</button>
+      <button class="tab-btn" data-tab="pomodoro">⏱️ Pomodoro</button>
+      <button class="tab-btn" data-tab="profile">👤 Profile</button>
+      <span class="tab-glider"></span>
+    </nav>
+
+    <!-- ================= TO-DO TAB ================= -->
+    <section id="todo" class="tab-panel active">
+      <div class="creator">
+        <input
+          type="text"
+          id="todo-input"
+          class="creator-input"
+          placeholder="Type a task... e.g. Study programming"
+          autocomplete="off"
+        />
+        <div class="creator-row">
+          <div class="color-picker" id="color-picker">
+            <span class="swatch active" data-color="#6366f1" style="--c:#6366f1"></span>
+            <span class="swatch" data-color="#ec4899" style="--c:#ec4899"></span>
+            <span class="swatch" data-color="#f59e0b" style="--c:#f59e0b"></span>
+            <span class="swatch" data-color="#10b981" style="--c:#10b981"></span>
+            <span class="swatch" data-color="#06b6d4" style="--c:#06b6d4"></span>
+            <span class="swatch" data-color="#8b5cf6" style="--c:#8b5cf6"></span>
+            <span class="swatch" data-color="#ef4444" style="--c:#ef4444"></span>
+          </div>
+          <button id="add-task-btn" class="btn-add">+ Add</button>
+        </div>
+      </div>
+
+      <div class="board">
+        <div class="column column-active">
+          <div class="column-head">
+            <span class="dot dot-yellow"></span>
+            <span>To Do</span>
+            <span class="col-count" id="active-count">0</span>
+          </div>
+          <div class="column-body" id="active-list"></div>
+        </div>
+
+        <div class="column column-done">
+          <div class="column-head">
+            <span class="dot dot-green"></span>
+            <span>Completed</span>
+            <span class="col-count" id="done-count">0</span>
+          </div>
+          <div class="column-body" id="done-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= POMODORO TAB ================= -->
+    <section id="pomodoro" class="tab-panel">
+      <div class="pomo-modes">
+        <button class="mode-btn active" data-mode="focus">Focus</button>
+        <button class="mode-btn" data-mode="break">Break</button>
+      </div>
+
+      <div class="timer-display">
+        <svg class="progress-ring" width="240" height="240">
+          <circle class="ring-bg" cx="120" cy="120" r="108" />
+          <circle class="ring-fg" cx="120" cy="120" r="108" />
+        </svg>
+        <div class="timer-center">
+          <div id="timer-time">25:00</div>
+          <div id="timer-label" class="timer-label">Focus time</div>
+        </div>
+      </div>
+
+      <div class="timer-controls">
+        <button id="start-btn" class="btn-timer btn-start">Start</button>
+        <button id="pause-btn" class="btn-timer btn-pause" disabled>Pause</button>
+        <button id="reset-btn" class="btn-timer btn-reset">Reset</button>
+      </div>
+
+      <div class="timer-settings">
+        <h3>⚙️ Set duration (minutes)</h3>
+        <div class="setting-row">
+          <label for="focus-minutes">Focus duration</label>
+          <input type="number" id="focus-minutes" min="1" max="180" value="25" />
+        </div>
+        <div class="setting-row">
+          <label for="break-minutes">Break duration</label>
+          <input type="number" id="break-minutes" min="1" max="60" value="5" />
+        </div>
+        <button id="apply-settings" class="btn-apply">Save duration</button>
+      </div>
+
+      <div class="pomo-stats">
+        <span>Sessions completed today: <strong id="sessions-count">0</strong></span>
+      </div>
+    </section>
+
+    <!-- ================= PROFILE TAB ================= -->
+    <section id="profile" class="tab-panel">
+      <div class="profile-head">
+        <div class="avatar" id="avatar">?</div>
+        <div>
+          <h2 id="profile-name">—</h2>
+          <p class="subtitle" id="profile-joined"></p>
+        </div>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat-card">
+          <span class="stat-num" id="stat-total">0</span>
+          <span class="stat-label">Completed</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="stat-today">0</span>
+          <span class="stat-label">Today</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="stat-pending">0</span>
+          <span class="stat-label">Pending</span>
+        </div>
+      </div>
+
+      <div class="profile-filter">
+        <h3>✅ Completed tasks</h3>
+        <div class="filter-row">
+          <input type="text" id="profile-search" class="profile-search" placeholder="🔎 Search..." />
+          <select id="profile-day-filter" class="profile-select">
+            <option value="all">All days</option>
+            <option value="today">Today</option>
+            <option value="7">Last 7 days</option>
+            <option value="30">Last 30 days</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="profile-history" class="profile-history"></div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
