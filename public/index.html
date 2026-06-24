@@ -8,6 +8,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   <div class="bg-orbs">
@@ -16,8 +20,8 @@
     <span class="orb orb-3"></span>
   </div>
 
-  <!-- ================= AUTH SCREEN ================= -->
-  <div id="auth-screen" class="auth-screen">
+  <!-- ================= AUTH SCREEN (disabled for now — markup & logic kept for later) ================= -->
+  <div id="auth-screen" class="auth-screen" style="display:none">
     <div class="auth-card">
       <h1>🚀 Work Hard</h1>
       <p class="subtitle">Sign in to track your progress</p>
@@ -192,5 +196,10 @@
   </div>
 
   <script src="app.js"></script>
+
+  <!-- Vercel Web Analytics (visitors, device, OS, browser, referrer, country).
+       Works once "Analytics" is enabled in the Vercel dashboard and the site is
+       deployed on Vercel. Harmlessly 404s when running locally. -->
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

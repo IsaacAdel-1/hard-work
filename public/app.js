@@ -223,13 +223,15 @@ async function enterApp(username) {
   appEl.style.display = "block";
 
   if (isGuest) {
-    userNameEl.textContent = "👤 Guest";
-    logoutBtn.textContent = "💾 Save / Sign up";
-    logoutBtn.classList.add("is-guest");
+    // Login/Sign-up UI is disabled for now — hide the account controls.
+    // (The auth logic itself is kept in place for future use.)
+    userNameEl.textContent = "";
+    logoutBtn.style.display = "none";
   } else {
     userNameEl.textContent = "👋 " + username;
     logoutBtn.textContent = "Logout";
     logoutBtn.classList.remove("is-guest");
+    logoutBtn.style.display = "";
   }
 
   // load data through the storage layer
@@ -254,17 +256,27 @@ async function enterApp(username) {
   renderProfile(username, createdAt);
 }
 
-/* Auto-login if a valid token exists */
+/* Startup.
+   The login / sign-up screen is disabled for now (its logic is kept for later).
+   If a valid token happens to exist we still honor it; otherwise everyone
+   goes straight into the app as a guest — no auth screen. */
 (async function init() {
-  if (!token) return;
-  try {
-    const me = await api("/me");
-    isGuest = false;
-    await enterApp(me.username);
-  } catch (e) {
-    token = null;
-    localStorage.removeItem("wh_token");
+  if (token) {
+    try {
+      const me = await api("/me");
+      isGuest = false;
+      await enterApp(me.username);
+      return;
+    } catch (e) {
+      token = null;
+      localStorage.removeItem("wh_token");
+    }
   }
+  // No session -> enter as guest automatically (data stays in this browser).
+  isGuest = true;
+  if (!localStorage.getItem("wh_guest_since"))
+    lsSet("wh_guest_since", new Date().toISOString());
+  await enterApp("Guest");
 })();
 
 /* ============================================================

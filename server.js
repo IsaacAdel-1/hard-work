@@ -207,14 +207,20 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-/* ---------- Start: connect to DB, THEN listen ---------- */
+/* ---------- Start the server ----------
+   The frontend currently runs in guest mode (data stays in the browser), so the
+   static app must always be served. We start listening immediately and connect
+   to MongoDB in the background — the (dormant) account API uses it once ready. */
+app.listen(PORT, () => {
+  console.log(`\n✅ Work Hard server running on port ${PORT}\n`);
+});
+
 connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`\n✅ Work Hard server running at http://localhost:${PORT}\n`);
-    });
-  })
-  .catch((err) => {
-    console.error("❌ Failed to connect to MongoDB:", err.message);
-    process.exit(1);
-  });
+  .then(() => console.log("✅ Connected to MongoDB (account API ready)"))
+  .catch((err) =>
+    console.warn("⚠️  MongoDB not connected — account API disabled:", err.message)
+  );
+
+if (JWT_SECRET === "work-hard-dev-secret-change-me") {
+  console.warn("⚠️  Using the default JWT_SECRET. Set a strong JWT_SECRET env var in production.");
+}
